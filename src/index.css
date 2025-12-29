@@ -1,96 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Smart Library Design System - Scholarly & Modern */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Warm cream background with navy accents */
+    --background: 40 33% 97%;
+    --foreground: 220 40% 13%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 40 30% 99%;
+    --card-foreground: 220 40% 13%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 40 30% 99%;
+    --popover-foreground: 220 40% 13%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Deep navy primary */
+    --primary: 220 50% 20%;
+    --primary-foreground: 40 30% 97%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Warm cream secondary */
+    --secondary: 40 25% 92%;
+    --secondary-foreground: 220 40% 13%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 40 20% 94%;
+    --muted-foreground: 220 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Amber accent */
+    --accent: 38 92% 50%;
+    --accent-foreground: 220 40% 13%;
+
+    /* Sage green for availability */
+    --success: 142 55% 42%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warm red for issued */
+    --warning: 0 75% 55%;
+    --warning-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 38 92% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Custom library gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(220 50% 20%) 0%, hsl(220 45% 28%) 50%, hsl(38 40% 30%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(40 30% 99%) 0%, hsl(40 25% 96%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(32 95% 55%) 100%);
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 8px hsl(220 40% 13% / 0.05);
+    --shadow-md: 0 4px 16px hsl(220 40% 13% / 0.08);
+    --shadow-lg: 0 8px 32px hsl(220 40% 13% / 0.12);
+    --shadow-glow: 0 0 40px hsl(38 92% 50% / 0.25);
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 40 30% 97%;
+    --sidebar-foreground: 220 40% 13%;
+    --sidebar-primary: 220 50% 20%;
+    --sidebar-primary-foreground: 40 30% 97%;
+    --sidebar-accent: 40 25% 92%;
+    --sidebar-accent-foreground: 220 40% 13%;
+    --sidebar-border: 40 20% 88%;
+    --sidebar-ring: 38 92% 50%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 220 45% 8%;
+    --foreground: 40 25% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 42% 12%;
+    --card-foreground: 40 25% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 42% 12%;
+    --popover-foreground: 40 25% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 40 25% 95%;
+    --primary-foreground: 220 45% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 38% 18%;
+    --secondary-foreground: 40 25% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 220 35% 16%;
+    --muted-foreground: 40 15% 60%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 38 92% 55%;
+    --accent-foreground: 220 45% 8%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --success: 142 55% 48%;
+    --success-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --warning: 0 70% 58%;
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 35% 20%;
+    --input: 220 35% 20%;
+    --ring: 38 92% 55%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(220 45% 8%) 0%, hsl(220 40% 15%) 50%, hsl(38 40% 20%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(220 42% 12%) 0%, hsl(220 40% 10%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(38 92% 55%) 0%, hsl(32 95% 60%) 100%);
+
+    --shadow-sm: 0 2px 8px hsl(0 0% 0% / 0.2);
+    --shadow-md: 0 4px 16px hsl(0 0% 0% / 0.3);
+    --shadow-lg: 0 8px 32px hsl(0 0% 0% / 0.4);
+    --shadow-glow: 0 0 40px hsl(38 92% 55% / 0.3);
+
+    --sidebar-background: 220 45% 8%;
+    --sidebar-foreground: 40 25% 95%;
+    --sidebar-primary: 40 25% 95%;
+    --sidebar-primary-foreground: 220 45% 8%;
+    --sidebar-accent: 220 38% 18%;
+    --sidebar-accent-foreground: 40 25% 95%;
+    --sidebar-border: 220 35% 20%;
+    --sidebar-ring: 38 92% 55%;
   }
 }
 
@@ -100,6 +132,154 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+
+  .card-gradient {
+    background: var(--gradient-card);
+  }
+
+  .accent-gradient {
+    background: var(--gradient-accent);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-card-hover {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .text-gradient {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Book card hover effect */
+  .book-card {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .book-card:hover {
+    @apply -translate-y-2;
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Search input styling */
+  .search-input {
+    @apply border-2 border-border bg-card focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all duration-200;
+  }
+
+  /* Feature card */
+  .feature-card {
+    @apply p-6 rounded-2xl bg-card border border-border transition-all duration-300;
+  }
+
+  .feature-card:hover {
+    @apply border-accent/50;
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Availability badges */
+  .badge-available {
+    @apply bg-success/10 text-success border border-success/20;
+  }
+
+  .badge-issued {
+    @apply bg-warning/10 text-warning border border-warning/20;
+  }
+
+  /* Animated underline for links */
+  .link-underline {
+    @apply relative;
+  }
+
+  .link-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-accent transition-all duration-300;
+  }
+
+  .link-underline:hover::after {
+    @apply w-full;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out forwards;
+  }
+
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
