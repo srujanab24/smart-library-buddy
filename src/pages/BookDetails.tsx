@@ -3,6 +3,8 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/layout/Layout";
 import BookGrid from "@/components/books/BookGrid";
+import BookReviews from "@/components/books/BookReviews";
+import BorrowButton from "@/components/books/BorrowButton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Book } from "@/types/book";
@@ -23,37 +25,42 @@ const BookDetails = () => {
   const [recommendations, setRecommendations] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchBook = async () => {
-      if (!id) return;
+  const fetchBook = async () => {
+    if (!id) return;
 
-      setLoading(true);
-      const { data } = await supabase
+    setLoading(true);
+    const { data } = await supabase
+      .from("books")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (data) {
+      setBook(data);
+
+      // Fetch recommendations (same category, different book)
+      const { data: related } = await supabase
         .from("books")
         .select("*")
-        .eq("id", id)
-        .maybeSingle();
+        .eq("category", data.category)
+        .neq("id", id)
+        .limit(4);
 
-      if (data) {
-        setBook(data);
-
-        // Fetch recommendations (same category, different book)
-        const { data: related } = await supabase
-          .from("books")
-          .select("*")
-          .eq("category", data.category)
-          .neq("id", id)
-          .limit(4);
-
-        if (related) {
-          setRecommendations(related);
-        }
+      if (related) {
+        setRecommendations(related);
       }
-      setLoading(false);
-    };
+    }
+    setLoading(false);
+  };
 
+  useEffect(() => {
     fetchBook();
   }, [id]);
+
+  const handleBorrow = () => {
+    // Refresh book data to update availability
+    fetchBook();
+  };
 
   if (loading) {
     return (
@@ -107,7 +114,7 @@ const BookDetails = () => {
         </Button>
 
         {/* Book Details */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-3 gap-8 mb-8">
           {/* Book Cover */}
           <div className="animate-scale-in">
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-secondary shadow-lg">
@@ -131,6 +138,16 @@ const BookDetails = () => {
                   {book.availability ? "Available" : "Issued"}
                 </Badge>
               </div>
+            </div>
+
+            {/* Borrow Button */}
+            <div className="mt-4">
+              <BorrowButton
+                bookId={book.id}
+                bookTitle={book.title}
+                isAvailable={book.availability}
+                onBorrow={handleBorrow}
+              />
             </div>
           </div>
 
@@ -209,9 +226,12 @@ const BookDetails = () => {
           </div>
         </div>
 
+        {/* Reviews Section */}
+        <BookReviews bookId={book.id} />
+
         {/* Recommendations */}
         {recommendations.length > 0 && (
-          <section>
+          <section className="mt-12">
             <h2 className="font-display text-2xl font-bold mb-6">
               Related Books in {book.category}
             </h2>
