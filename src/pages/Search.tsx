@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/layout/Layout";
@@ -9,10 +9,61 @@ import { Badge } from "@/components/ui/badge";
 import { Book } from "@/types/book";
 import { Filter, X } from "lucide-react";
 
+// Binary search function to find all books matching a title prefix
+const binarySearchByTitle = (sortedBooks: Book[], query: string): Book[] => {
+  if (!query) return sortedBooks;
+  
+  const lowerQuery = query.toLowerCase();
+  
+  // Find the first index where title starts with or contains the query
+  let left = 0;
+  let right = sortedBooks.length - 1;
+  let firstMatch = -1;
+  
+  // Binary search to find any matching book
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    const midTitle = sortedBooks[mid].title.toLowerCase();
+    
+    if (midTitle.includes(lowerQuery)) {
+      firstMatch = mid;
+      break;
+    } else if (midTitle < lowerQuery) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+  
+  if (firstMatch === -1) return [];
+  
+  // Expand from the match to find all matching books
+  const results: Book[] = [];
+  
+  // Search backwards from firstMatch
+  for (let i = firstMatch; i >= 0; i--) {
+    if (sortedBooks[i].title.toLowerCase().includes(lowerQuery)) {
+      results.unshift(sortedBooks[i]);
+    } else {
+      break;
+    }
+  }
+  
+  // Search forwards from firstMatch + 1
+  for (let i = firstMatch + 1; i < sortedBooks.length; i++) {
+    if (sortedBooks[i].title.toLowerCase().includes(lowerQuery)) {
+      results.push(sortedBooks[i]);
+    } else {
+      break;
+    }
+  }
+  
+  return results;
+};
+
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [books, setBooks] = useState<Book[]>([]);
-  const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
@@ -27,6 +78,7 @@ const Search = () => {
       const { data } = await supabase.from("books").select("*").order("title");
 
       if (data) {
+        // Books are already sorted by title from the database
         setBooks(data);
         const uniqueCategories = [...new Set(data.map((book) => book.category))];
         setCategories(uniqueCategories.sort());
@@ -37,30 +89,24 @@ const Search = () => {
     fetchBooks();
   }, []);
 
-  useEffect(() => {
-    let result = [...books];
+  // Use binary search for title-based searching, then apply other filters
+  const filteredBooks = useMemo(() => {
+    // Binary search by title first (books are already sorted by title)
+    let result = binarySearchByTitle(books, searchQuery);
 
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      result = result.filter(
-        (book) =>
-          book.title.toLowerCase().includes(query) ||
-          book.author.toLowerCase().includes(query) ||
-          book.category.toLowerCase().includes(query)
-      );
-    }
-
+    // Apply category filter
     if (selectedCategory) {
       result = result.filter((book) => book.category === selectedCategory);
     }
 
+    // Apply availability filter
     if (availabilityFilter === "true") {
       result = result.filter((book) => book.availability);
     } else if (availabilityFilter === "false") {
       result = result.filter((book) => !book.availability);
     }
 
-    setFilteredBooks(result);
+    return result;
   }, [books, searchQuery, selectedCategory, availabilityFilter]);
 
   const updateSearchParams = (key: string, value: string) => {
