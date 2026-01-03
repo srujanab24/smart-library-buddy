@@ -71,6 +71,7 @@ const Search = () => {
   const searchQuery = searchParams.get("q") || "";
   const selectedCategory = searchParams.get("category") || "";
   const availabilityFilter = searchParams.get("available") || "";
+  const sortOrder = searchParams.get("sort") || "asc";
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -89,10 +90,19 @@ const Search = () => {
     fetchBooks();
   }, []);
 
+  // Sort books based on selected order before binary search
+  const sortedBooks = useMemo(() => {
+    const sorted = [...books];
+    if (sortOrder === "desc") {
+      sorted.reverse();
+    }
+    return sorted;
+  }, [books, sortOrder]);
+
   // Use binary search for title-based searching, then apply other filters
   const filteredBooks = useMemo(() => {
-    // Binary search by title first (books are already sorted by title)
-    let result = binarySearchByTitle(books, searchQuery);
+    // Binary search by title first (books are sorted)
+    let result = binarySearchByTitle(sortedBooks, searchQuery);
 
     // Apply category filter
     if (selectedCategory) {
@@ -107,7 +117,7 @@ const Search = () => {
     }
 
     return result;
-  }, [books, searchQuery, selectedCategory, availabilityFilter]);
+  }, [sortedBooks, searchQuery, selectedCategory, availabilityFilter]);
 
   const updateSearchParams = (key: string, value: string) => {
     const newParams = new URLSearchParams(searchParams);
@@ -123,7 +133,7 @@ const Search = () => {
     setSearchParams(new URLSearchParams());
   };
 
-  const hasActiveFilters = searchQuery || selectedCategory || availabilityFilter;
+  const hasActiveFilters = searchQuery || selectedCategory || availabilityFilter || sortOrder !== "asc";
 
   return (
     <Layout>
@@ -223,6 +233,27 @@ const Search = () => {
                     onClick={() => updateSearchParams("available", "false")}
                   >
                     Issued
+                  </Button>
+                </div>
+              </div>
+
+              {/* Sort Order */}
+              <div>
+                <label className="text-sm font-medium mb-2 block">Sort by Title</label>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant={sortOrder === "asc" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => updateSearchParams("sort", "asc")}
+                  >
+                    A–Z
+                  </Button>
+                  <Button
+                    variant={sortOrder === "desc" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => updateSearchParams("sort", "desc")}
+                  >
+                    Z–A
                   </Button>
                 </div>
               </div>
